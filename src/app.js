@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { AsyncStorage, View, Text } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import { AppState, AsyncStorage, View, Text } from 'react-native';
 import { Device } from './components';
 import API from './api';
 
@@ -10,7 +11,15 @@ export default class App extends Component {
     AsyncStorage.getItem('devices')
       .then(devicesJson => JSON.parse(devicesJson))
       .then(devices => this.setState({ devices }));
+  }
 
+  componentDidMount() {
+    AppState.addEventListener('change', state =>
+      this.fetchDevices());
+  }
+
+  fetchDevices() {
+    console.log('fetching');
     API.get('/api/devices.json')
       .then(({ data }) => {
         this.setState({ devices: data });
@@ -18,16 +27,24 @@ export default class App extends Component {
       });
   }
 
+  reload(slug, statut) {
+    devices = this.state.devices.map(device => {
+      if (device.title_slug === slug) return { ...device, statut };
+      return device;
+    });
+    setTimeout(() => this.setState({ devices }), 350);
+  }
+
   render() {
     return (
-      <View style={s.container}>
+      <LinearGradient colors={['#9691FF', '#5D74F8']} style={s.container}>
         <Text style={s.title}>Maison</Text>
         <View style={s.devices}>
-          {this.state.devices.map(device =>
-            <Device {...device} />
+          {this.state.devices.filter(device => device.title).map(device =>
+            <Device reload={this.reload.bind(this)} {...device} />
           )}
         </View>
-      </View>
+      </LinearGradient>
     );
   }
 }
@@ -36,7 +53,7 @@ const s = {
   container: {
     backgroundColor: '#9691FF',
     flex: 1,
-    paddingTop: 64,
+    paddingTop: 84,
   },
   title: {
     fontWeight: '600',
@@ -45,10 +62,10 @@ const s = {
     padding: 30,
   },
   devices: {
-    backgroundColor: '#252C4B',
     flex: 1,
     borderRadius: 30,
     paddingVertical: 60,
     paddingHorizontal: 30,
+    backgroundColor: '#252C4B',
   }
 }
