@@ -1,4 +1,4 @@
 import { AppRegistry } from 'react-native';
-import App from 'features/splash/routes';
+import App from './src/app';
 
 AppRegistry.registerComponent('Maison', () => App);
