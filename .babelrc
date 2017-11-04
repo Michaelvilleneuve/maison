@@ -2,11 +2,6 @@
   "presets": ["react-native"],
   "plugins": [
     "transform-decorators-legacy",
-    ["module-resolver", {
-      "root": ["./src"],
-      "alias": {
-        "features": "features",
-      }
-    }]
+    "transform-class-properties",
   ]
 }
