@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Dimensions, Text } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import API from '../api';
 import { Touchable } from './';
 
@@ -19,7 +20,7 @@ export class Device extends Component {
         style={s.container(this.props.statut)}
       >
         <Text style={s.deviceName(this.props.statut)}>{this.props.title}</Text>
-        <Text style={s.deviceName(this.props.statut)}>{this.props.statut ? 'Allumé' : 'Éteint'}</Text>
+        <Icon name={this.props.icon} style={s.icon(this.props.statut)} />
       </Touchable>
     );
   }
@@ -45,7 +46,11 @@ const s = {
   },
   deviceName: status => ({
     color: status ? '#27325F' : '#9691FF',
-    fontWeight: '600',
+    fontWeight: '400',
     fontSize: 20,
+  }),
+  icon: status => ({
+    fontSize: 30,
+    color: status ? '#27325F' : '#9691FF',
   }),
 };
