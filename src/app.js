@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import { ScrollView, AppState, Dimensions, AsyncStorage, View, Text } from 'react-native';
+import { ScrollView, AppState, AsyncStorage, View, Text } from 'react-native';
 import { Device, Action, Sensor } from './components';
 import API from './api';
 
 export default class App extends Component {
-  state = { devices: [], actions: [], sensors: [] };
+  constructor(props) {
+    super(props);
+    this.state = { devices: [], actions: [], sensors: [] };
+  }
 
   componentWillMount() {
     AsyncStorage.getItem('devices')
@@ -20,8 +23,7 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    AppState.addEventListener('change', state =>
-      this.fetchDatas());
+    AppState.addEventListener('change', () => this.fetchDatas());
   }
 
   fetchDatas() {
@@ -37,14 +39,13 @@ export default class App extends Component {
       });
     API.get('/api/sensors.json')
       .then(({ data }) => {
-        console.log(data);
         this.setState({ sensors: data });
         AsyncStorage.setItem('sensors', JSON.stringify(data));
       });
   }
 
   reload(slug, statut) {
-    devices = this.state.devices.map(device => {
+    const devices = this.state.devices.map((device) => {
       if (device.title_slug === slug) return { ...device, statut };
       return device;
     });
@@ -55,19 +56,19 @@ export default class App extends Component {
     return (
       <View style={s.container}>
         <LinearGradient
-          start={{x: 0.0, y: 0.25}} end={{x: 0.5, y: 1.0}}
+          start={{ x: 0.0, y: 0.25 }}
+          end={{ x: 0.5, y: 1.0 }}
           colors={['#9691FF', '#5D74F8']}
           style={s.containerGradient}
         >
           <Text style={s.title}>Maison</Text>
-          <ScrollView style={s.actions} horizontal={true}>
-            {this.state.actions.map(action => <Action {...action} /> )}
+          <ScrollView style={s.actions} horizontal>
+            {this.state.actions.map(action => <Action {...action} />)}
           </ScrollView>
         </LinearGradient>
         <ScrollView style={s.devicesC} contentContainerStyle={s.devices}>
           {this.state.devices.map(device =>
-            <Device reload={this.reload.bind(this)} {...device} />
-          )}
+            <Device reload={this.reload.bind(this)} {...device} />)}
         </ScrollView>
         <View style={s.sensors}>
           {this.state.sensors.map(sensor => <Sensor {...sensor} />)}
@@ -110,5 +111,5 @@ const s = {
   actions: {
     elevation: 1,
     paddingHorizontal: 30,
-  }
-}
+  },
+};
