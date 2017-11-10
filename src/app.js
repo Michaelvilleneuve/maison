@@ -13,13 +13,13 @@ export default class App extends Component {
   componentWillMount() {
     AsyncStorage.getItem('devices')
       .then(devicesJson => JSON.parse(devicesJson))
-      .then(devices => this.setState({ devices }));
+      .then(devices => devices && this.setState({ devices }));
     AsyncStorage.getItem('actions')
       .then(actionsJson => JSON.parse(actionsJson))
-      .then(actions => this.setState({ actions }));
+      .then(actions => actions && this.setState({ actions }));
     AsyncStorage.getItem('sensors')
       .then(sensorsJson => JSON.parse(sensorsJson))
-      .then(sensors => this.setState({ sensors }));
+      .then(sensors => sensors && this.setState({ sensors }));
   }
 
   componentDidMount() {
@@ -28,9 +28,10 @@ export default class App extends Component {
 
   fetchDatas() {
     API.get('/api/devices.json')
-      .then(({ data }) => {
-        this.setState({ devices: data });
-        AsyncStorage.setItem('devices', JSON.stringify(data));
+      .then((res) => {
+        console.log(res);
+        this.setState({ devices: res.data });
+        AsyncStorage.setItem('devices', JSON.stringify(res.data));
       });
     API.get('/api/actions.json')
       .then(({ data }) => {
