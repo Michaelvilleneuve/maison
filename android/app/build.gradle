@@ -109,6 +109,16 @@ android {
         renderscriptTargetApi 23
         renderscriptSupportModeEnabled true
     }
+    signingConfigs {
+        release {
+            if (project.hasProperty('MAISON_RELEASE_STORE_FILE')) {
+                storeFile file(MAISON_RELEASE_STORE_FILE)
+                storePassword MAISON_RELEASE_STORE_PASSWORD
+                keyAlias MAISON_RELEASE_KEY_ALIAS
+                keyPassword MAISON_RELEASE_KEY_PASSWORD
+            }
+        }
+    }
     splits {
         abi {
             reset()
@@ -120,6 +130,7 @@ android {
     buildTypes {
         release {
             minifyEnabled enableProguardInReleaseBuilds
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
