@@ -29,19 +29,24 @@ export default class App extends Component {
   fetchDatas() {
     API.get('/api/devices.json')
       .then((res) => {
-        console.log(res);
-        this.setState({ devices: res.data });
-        AsyncStorage.setItem('devices', JSON.stringify(res.data));
+        if (res.data) {
+          this.setState({ devices: res.data });
+          AsyncStorage.setItem('devices', JSON.stringify(res.data));
+        }
       });
     API.get('/api/actions.json')
       .then(({ data }) => {
-        this.setState({ actions: data });
-        AsyncStorage.setItem('actions', JSON.stringify(data));
+        if (data) {
+          this.setState({ actions: data });
+          AsyncStorage.setItem('actions', JSON.stringify(data));
+        }
       });
     API.get('/api/sensors.json')
       .then(({ data }) => {
-        this.setState({ sensors: data });
-        AsyncStorage.setItem('sensors', JSON.stringify(data));
+        if (data) {
+          this.setState({ sensors: data });
+          AsyncStorage.setItem('sensors', JSON.stringify(data));
+        }
       });
   }
 
